@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  api: &fastAPI
+    build:
+      context: .
+      dockerfile: ./compose/Dockerfile
+    image: storage-service_api
+    container_name: storage_service_api
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: /start
+    stdin_open: true
+    tty: true
+
+  redis:
+    image: redis
+    container_name: storage-service_redis
+    ports:
+      - "6379:6379"
