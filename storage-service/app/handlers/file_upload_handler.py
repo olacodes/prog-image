@@ -1,13 +1,16 @@
-from typing import List
-from fastapi import FastAPI, File, UploadFile
-from app.tasks import format_converter
-import json
-import pickle
 import shutil
+import environ
+
+from typing import List
+from fastapi import File
+
+from app.utils import list_files
+from app.tasks import format_converter, delete_tmp_dir, upload_file_s3
+
+env = environ.Env()
 
 
 class FileUploadHandler:
-    # Pass the data object into this class
     def __init__(self, files: List[File]):
         self.files = files
 
@@ -21,5 +24,19 @@ class FileUploadHandler:
                 counter += 1
         return {"result": f"write {counter} file in temp/files"}
 
-    def send_s3(self):
-        format_converter.delay()
+    def chain_convert_s3_del(self):
+        celery_chain = format_converter.apply_async(
+            (), link=upload_file_s3.s(env('AWS_S3_BUCKET')))
+        delete_tmp_dir.delay([env('TMP_FILES'), env('TMP_IMG')])
+
+    # def convert(self):
+    #     format_converter.delay()
+
+    # def s3_upload(self):
+    #     upload_file_s3.delay(
+    #         list_files(env('TMP_IMG')),
+    #         env('AWS_S3_BUCKET')
+    #     )
+
+    # def delete_tmp(self):
+    #     delete_tmp_dir.delay([env('TMP_FILES'), env('TMP_IMG')])

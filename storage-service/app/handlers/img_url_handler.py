@@ -2,4 +2,8 @@
 
 class URLImageHandler:
     # Download the image
-    pass
+    def __init__(self, urls: list):
+        self.urls = urls
+        
+    # 
+        
