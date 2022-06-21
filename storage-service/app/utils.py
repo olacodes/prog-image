@@ -1,11 +1,24 @@
 import os
 import glob
+import shutil
 from pathlib import Path
 from os.path import isfile, isdir
+from PIL import Image
+
+
+def convert(formats, filename, file=None):
+    image = Image.open(f'tmp/files/{file}')
+    image = image.convert('RGB')
+    image = image.save(f'tmp/img/{filename}/{filename}.{format}')
+
+
+def create_dir(dir_name):
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)
 
 
 def get_content_type(request):
-    types = {'multipart/form-data;': 'form_data', 'application/json;': 'json'}
+    types = {'multipart/form-data;': 'form_data', 'application/json': 'json'}
     content_type = request.headers['content-type']
     return types[content_type.split(" ")[0]]
 

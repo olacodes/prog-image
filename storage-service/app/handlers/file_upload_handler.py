@@ -16,13 +16,13 @@ class FileUploadHandler:
 
     # I/O bound operation: writing to tmp file
     async def file_writer(self):
-        counter = 0
+        file_written = []
         for file in self.files:
             file_location = f"tmp/files/{file.filename}"
             with open(file_location, "wb") as fd:
                 shutil.copyfileobj(file.file, fd)
-                counter += 1
-        return {"result": f"write {counter} file in temp/files"}
+                file_written.append(file.filename)
+        return {"result": f"write {file_written} file in temp/files"}
 
     def chain_convert_s3_del(self):
         celery_chain = format_converter.apply_async(
