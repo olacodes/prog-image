@@ -27,7 +27,7 @@ class ImageURLs(BaseModel):
     urls: list[str] = []
 
 
-@app.post("/upload/images/")
+@app.post("/images/")
 async def upload_image(files: Optional[List[UploadFile]] = File(None)):
     handler = file_upload_handler.FileUploadHandler(files)
     writer_response = await handler.file_writer()
@@ -35,7 +35,7 @@ async def upload_image(files: Optional[List[UploadFile]] = File(None)):
     return writer_response
 
 
-@app.post("/upload/urls/")
+@app.post("/images/urls/")
 async def upload_url(
     img_urls: Union[ImageURLs, None] = [],
 ):
