@@ -1,0 +1,30 @@
+# Commons
+Pillow==9.1.1 # https://pillow.readthedocs.io/en/stable/
+python-environ==0.4.54 # https://pypi.org/project/python-environ/
+
+# AWS 
+# ------------------------------------------------------------------------------
+boto3==1.24.12 # https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
+# aiobotocore==2.3.3 # https://github.com/aio-libs/aiobotocore
+
+# Fast API
+# ------------------------------------------------------------------------------
+fastapi>=0.68.0,<0.69.0 # https://fastapi.tiangolo.com/
+pydantic>=1.8.0,<2.0.0  # https://pydantic-docs.helpmanual.io/
+uvicorn>=0.15.0,<0.16.0 # https://www.uvicorn.org/
+python-multipart    # https://github.com/andrew-d/python-multipart
+
+# Celery
+# ------------------------------------------------------------------------------
+celery==5.2.7 # https://docs.celeryq.dev/en/stable/index.html
+flower==1.0.0  # https://github.com/mher/flower
+
+# Request Library
+# ------------------------------------------------------------------------------
+requests==2.26.0 # https://github.com/psf/requests
+
+# DB
+# ------------------------------------------------------------------------------
+redis==4.1.0  # https://github.com/redis/redis-py
+
+

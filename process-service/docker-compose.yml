@@ -1,36 +1,35 @@
 version: "3"
 
 services:
-  api: &fastAPI
+  api: &process_service
     build:
       context: .
       dockerfile: ./compose/Dockerfile
-    image: storage-service_api
-    container_name: storage_service_api
+    image: process_sevice_api
+    container_name: process_service_api
     depends_on:
       - redis
     volumes:
       - .:/app
-      - ./tmp/img:/app/tmp/img
-      - ./tmp/files:/app/tmp/files
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "9000:9000"
     command: /start
     stdin_open: true
     tty: true
 
-  redis_storage:
-    image: redis:6.2.7
-    container_name: storage_service_redis
+  redis:
+    image: redis
+    container_name: process_service_redis
+    command: --port 6380
     ports:
-      - "6379:6379"
+      - "6380:6380"
 
   celeryworker:
-    <<: *fastAPI
-    image: storage_service-celeryworker
-    container_name: storage_service_celeryworker
+    <<: *process_service
+    image: process_service_celeryworker
+    container_name: process_service_celeryworker
     depends_on:
       - redis
       - api
@@ -41,11 +40,12 @@ services:
     command: /start-celeryworker
 
   flower:
-    <<: *fastAPI
-    image: storage-service_flower
-    container_name: storage_service_flower
+    <<: *process_service
+    image: process_service_flower
+    container_name: process_service_flower
     ports:
-      - "5555:5555"
+      - "5556:5556"
     depends_on:
+      - redis
       - celeryworker
     command: /start-flower
