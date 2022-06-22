@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/Dockerfile
-    image: storage-service_api
+    image: storage_service_api
     container_name: storage_service_api
     depends_on:
       - redis
@@ -21,8 +21,8 @@ services:
     stdin_open: true
     tty: true
 
-  redis_storage:
-    image: redis:6.2.7
+  redis:
+    image: redis
     container_name: storage_service_redis
     ports:
       - "6379:6379"
@@ -42,7 +42,7 @@ services:
 
   flower:
     <<: *fastAPI
-    image: storage-service_flower
+    image: storage_service_flower
     container_name: storage_service_flower
     ports:
       - "5555:5555"

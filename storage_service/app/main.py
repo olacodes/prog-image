@@ -47,7 +47,6 @@ async def upload_url(
 @app.get("/images/{image_name}/")
 async def get_image(image_name):
     res = await s3_service.get_file(image_name)
-    print(res)
     return {"image_name": image_name}
 
 
