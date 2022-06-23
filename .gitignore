@@ -8,6 +8,7 @@ db.sqlite3
 # C extensions
 *.so
 tmp/
+.env
 
 
 # Distribution / packaging
