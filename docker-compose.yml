@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  python:
+    extends:
+      file: common-services.yml
+      service: prog_img_python
+  redis:
+    extends:
+      file: common-services.yml
+      service: progImg_redis
+
+  celeryworker:
+    extends:
+      file: common-services.yml
+      service: progImg_celeryworker
+    depends_on:
+      - redis
+
+  flower:
+    extends:
+      file: common-services.yml
+      service: prog_img_flower
+    depends_on:
+      - redis
+      - celeryworker
+
+  storage_service:
+    extends:
+      file: storage-compose.yml
+      service: storage_service
+    depends_on:
+      - redis
+
+  process_service:
+    extends:
+      file: process-compose.yml
+      service: process_service
+    depends_on:
+      - redis

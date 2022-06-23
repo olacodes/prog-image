@@ -26,5 +26,3 @@ requests==2.26.0 # https://github.com/psf/requests
 # DB
 # ------------------------------------------------------------------------------
 redis==4.1.0  # https://github.com/redis/redis-py
-
-

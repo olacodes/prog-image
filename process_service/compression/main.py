@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Union, List, Optional
 from fastapi import FastAPI, File, UploadFile, Form
 
-from compression.utils import fetch_url, resize
+from process_service.compression.utils import fetch_url, resize
 
 app = FastAPI()
 
@@ -31,7 +31,7 @@ async def compress_file(
 @ app.post("/compress/urls/")
 async def compress_url(
     urls: Union[ImageURLs, None] = [],
-    size_ratio=0.9, quality=90, width=500, height=500
+    size_ratio=0.9, quality=10, width=200, height=200
 ):
     res = []
     for url in urls.urls:

@@ -5,10 +5,10 @@ from pydantic import BaseModel
 from typing import Union, List, Optional, Set
 from fastapi import FastAPI, File, UploadFile, Form, Request, Body
 
-from app.handlers import file_upload_handler, repo_img_handler, img_url_handler
-from app.tasks import format_converter, url_format_converter, delete_tmp_dir
-from s3.s3_service import S3Service
-from app.utils import get_content_type, list_files
+from storage_service.app.handlers import file_upload_handler, repo_img_handler, img_url_handler
+from storage_service.app.tasks import format_converter, url_format_converter, delete_tmp_dir
+from storage_service.s3.s3_service import S3Service
+from storage_service.app.utils import get_content_type, list_files
 
 env = environ.Env()
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', None)
@@ -27,10 +27,25 @@ class ImageURLs(BaseModel):
     urls: list[str] = []
 
 
+@app.post("/files/")
+async def create_files(files: list[bytes] = File(default=None)):
+    return {"file_sizes": [len(file) for file in files]}
+
+
+@app.post("/uploadfiles/")
+async def create_upload_files(
+    files: list[UploadFile] = File(description="Multiple files as UploadFile",default=None),
+):
+    return {"filenames": [file.filename for file in files]}
+
+
+
 @app.post("/images/")
-async def upload_image(files: Optional[List[UploadFile]] = File(None)):
+def upload_image(files: List[UploadFile] = File(None)):
+    print("This is called")
+    print(files)
     handler = file_upload_handler.FileUploadHandler(files)
-    writer_response = await handler.file_writer()
+    writer_response = handler.file_writer()
     handler.chain_convert_s3_del()
     return writer_response
 

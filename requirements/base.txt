@@ -1,0 +1,8 @@
+# Celery
+# ------------------------------------------------------------------------------
+celery==5.2.7 # https://docs.celeryq.dev/en/stable/index.html
+flower==1.0.0  # https://github.com/mher/flower
+
+# DB
+# ------------------------------------------------------------------------------
+redis==4.1.0  # https://github.com/redis/redis-py

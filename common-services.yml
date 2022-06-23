@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  prog_img_python: &progImgBase
+    build:
+      context: .
+      dockerfile: ./compose/Dockerfile
+    image: prog_img_python
+    container_name: prog_img_python
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+
+  progImg_redis:
+    image: redis
+    container_name: progImg_redis
+    ports:
+      - "6379:6379"
+
+  progImg_celeryworker:
+    <<: *progImgBase
+    image: prog_img_celeryworker
+    container_name: progImg_celeryworker
+    ports: []
+    volumes:
+      - .:/progImg
+      - ./logs:/progImg/logs
+    command: /start-celeryworker
+
+  prog_img_flower:
+    <<: *progImgBase
+    image: prog_img_flower
+    container_name: prog_img_flower
+    ports:
+      - "5555:5555"
+    command: /start-flower

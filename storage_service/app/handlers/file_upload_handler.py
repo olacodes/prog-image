@@ -4,8 +4,8 @@ import environ
 from typing import List
 from fastapi import File
 
-from app.utils import list_files
-from app.tasks import format_converter, delete_tmp_dir, upload_file_s3
+from storage_service.app.utils import list_files
+from storage_service.app.tasks import format_converter, delete_tmp_dir, upload_file_s3
 
 env = environ.Env()
 
@@ -15,7 +15,7 @@ class FileUploadHandler:
         self.files = files
 
     # I/O bound operation: writing to tmp file
-    async def file_writer(self):
+    def file_writer(self):
         file_written = []
         for file in self.files:
             file_location = f"tmp/files/{file.filename}"
