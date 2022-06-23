@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 
 from config.celery_app import app
-from app.utils import remove_file_dir, list_files, create_dir, convert
+from storage_service.app.utils import remove_file_dir, list_files, create_dir, convert
 
 env = environ.Env()
 SUPPORTED_FORMATS = ['png', 'jpeg', 'webp']

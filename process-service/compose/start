@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -o errexit
-set -o pipefail
-set -o nounset
-
-# /Users/macbook/work/interviews/prog-image/process-service/compression
-uvicorn compression.main:app --host 0.0.0.0 --port 9000 --reload

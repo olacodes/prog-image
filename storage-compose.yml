@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  storage_service: &storage_service
+    build:
+      context: .
+      dockerfile: ./compose/storage_service/Dockerfile
+    image: storage_service_api
+    container_name: storage_service_api
+    volumes:
+      - .:/storage_service
+      - ./storage_service/tmp/img:/storage_service/tmp/img
+      - ./storage_service/tmp/files:/storage_service/tmp/files
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: /storage_service_start
+    stdin_open: true
+    tty: true

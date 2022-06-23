@@ -1,5 +1,5 @@
 import environ
-from app.tasks import url_format_converter, delete_tmp_dir, upload_file_s3
+from storage_service.app.tasks import url_format_converter, delete_tmp_dir, upload_file_s3
 
 env = environ.Env()
 

@@ -4,10 +4,10 @@ from celery import Celery
 
 env = environ.Env()
 
-app = Celery('compression')
+app = Celery('app')
 app.conf.broker_url = env("CELERY_BROKER_URL")
 app.conf.result_backend = env("CELERY_RESULT_BACKEND")
-# app.conf.imports = ['app.tasks']
+app.conf.imports = ['storage_service.app.tasks']
 # app.conf.task_serializer = 'pickle'
 # app.conf.result_serializer = 'pickle'
 # app.conf.accept_content = ['application/json',
