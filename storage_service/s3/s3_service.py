@@ -6,10 +6,10 @@ import environ
 
 env = environ.Env()
 
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', None)
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', None)
-AWS_REGION = env('AWS_REGION', None)
-AWS_S3_BUCKET = env('AWS_S3_BUCKET', None)
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
+AWS_REGION = env('AWS_REGION', default=None)
+AWS_S3_BUCKET = env('AWS_S3_BUCKET', default=None)
 
 
 class S3Service:
