@@ -11,10 +11,10 @@ from storage_service.s3.s3_service import S3Service
 from storage_service.app.utils import get_content_type, list_files
 
 env = environ.Env()
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', None)
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', None)
-AWS_REGION = env('AWS_REGION', None)
-AWS_S3_BUCKET = env('AWS_S3_BUCKET', None)
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
+AWS_REGION = env('AWS_REGION', default=None)
+AWS_S3_BUCKET = env('AWS_S3_BUCKET', default=None)
 
 app = FastAPI()
 s3_service = S3Service(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION)
