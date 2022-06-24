@@ -67,4 +67,4 @@ jobs:
 
       - name: Run Tests and Linting Checks
         if: steps.filter.outputs.storage_service == 'true'
-        run: docker-compose exec -T storage_service pytest
+        run: docker-compose exec -T storage_service_api pytest
