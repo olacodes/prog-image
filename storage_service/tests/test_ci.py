@@ -1,6 +1,6 @@
 import json
 import pytest
-from config.conftest import test_app
+from storage_service.conftest import test_app
 
 
 def test_ci(test_app):

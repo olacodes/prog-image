@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: storage_service
+        working-directory: ./
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,14 +25,22 @@ jobs:
             storage_service:
               - 'storage_service/*'
 
-      - name: Startup Services
+      - name: Startup Common Services
         if: steps.filter.outputs.storage_service == 'true'
-        run: docker-compose -f storage_service/docker-compose.test.yml up -d
+        run: docker-compose -f common.test.yml up -d
 
-      - name: Show Services Logs
+      - name: Startup Storage Services
+        if: steps.filter.outputs.storage_service == 'true'
+        run: docker-compose -f docker-compose.test.yml up -d
+
+      - name: Show Common Services Logs
+        if: steps.filter.outputs.storage_service == 'true'
+        run: docker-compose -f common.test.yml logs
+
+      - name: Show Storage Services Logs
         if: steps.filter.outputs.storage_service == 'true'
         run: docker-compose -f docker-compose.test.yml logs
 
       - name: Run Tests and Linting Checks
         if: steps.filter.outputs.storage_service == 'true'
-        run: docker-compose -f docker-compose.test.yml exec -T django python manage.py test
+        run: docker-compose exec -T storage_service pytest

@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/storage_service/Dockerfile
-    image: storage_service_api
-    container_name: storage_service_api
+    image: storage_service
+    container_name: storage_service
     volumes:
       - .:/storage_service
       - ./storage_service/tmp/img:/storage_service/tmp/img
