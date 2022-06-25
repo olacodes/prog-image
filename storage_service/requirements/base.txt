@@ -9,7 +9,7 @@ boto3==1.24.12 # https://boto3.amazonaws.com/v1/documentation/api/latest/index.h
 
 # Fast API
 # ------------------------------------------------------------------------------
-fastapi>=0.68.0,<0.69.0 # https://fastapi.tiangolo.com/
+fastapi==0.78.0 # https://fastapi.tiangolo.com/
 pydantic>=1.8.0,<2.0.0  # https://pydantic-docs.helpmanual.io/
 uvicorn>=0.15.0,<0.16.0 # https://www.uvicorn.org/
 python-multipart    # https://github.com/andrew-d/python-multipart
