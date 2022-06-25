@@ -2,5 +2,6 @@
 
 docker exec -t -i process_service /bin/bash
 
-## Run Test
+## Run Test Locally
 docker-compose exec storage_service pytest
+docker-compose exec process_service pytest

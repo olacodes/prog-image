@@ -8,25 +8,13 @@ from PIL import Image
 from io import BytesIO
 
 
-def fetch_url(url):
-    try:
-        fname = url.split("/")[-1]
-        fname, ext = fname.split(".")[0], fname.split(".")[-1]
-        filename = re.sub('[^A-Za-z0-9]+', '', fname)
-        res = requests.get(url, stream=True)
-        file = res.content
-        return file, filename, ext
-    except Exception as e:
-        filename, file, ext = None
-        return file, filename, ext
-
-
-def resize(
+# IO bound operation needs celery
+def compress(
     file, filename, ext,
-    file_type=None, size_ratio=0.9,
+    is_file=False, size_ratio=0.9,
     quality=90, width=None, height=None
 ):
-    img = Image.open(BytesIO(file)) if file_type else Image.open(file)
+    img = Image.open(file) if is_file else Image.open(BytesIO(file))
     if size_ratio < 1.0:
         img = img.resize((int(img.size[0] * size_ratio),
                           int(img.size[1] * size_ratio)), Image.LANCZOS)
