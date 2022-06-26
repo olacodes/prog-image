@@ -27,20 +27,7 @@ class ImageURLs(BaseModel):
     urls: list[str] = []
 
 
-@app.post("/files/")
-async def create_files(files: list[bytes] = File(default=None)):
-    return {"file_sizes": [len(file) for file in files]}
-
-
-@app.post("/uploadfiles/")
-async def create_upload_files(
-    files: list[UploadFile] = File(description="Multiple files as UploadFile",default=None),
-):
-    return {"filenames": [file.filename for file in files]}
-
-
-
-@app.post("/images/")
+@app.post("/api/v1/images/")
 def upload_image(files: List[UploadFile] = File(None)):
     print("This is called")
     print(files)
@@ -50,7 +37,7 @@ def upload_image(files: List[UploadFile] = File(None)):
     return writer_response
 
 
-@app.post("/images/urls/")
+@app.post("/api/v1/images/urls/")
 async def upload_url(
     img_urls: Union[ImageURLs, None] = [],
 ):
@@ -59,19 +46,19 @@ async def upload_url(
     return img_urls
 
 
-@app.get("/images/{image_name}/")
+@app.get("/api/v1/images/{image_name}/")
 async def get_image(image_name):
     res = await s3_service.get_file(image_name)
     return {"image_name": image_name}
 
 
-@app.get("/images/{prefix}")
+@app.get("/api/v1/images/file/{prefix}")
 async def get_image(prefix):
     res = await s3_service.get_files(prefix)
     return {"image_name": res}
 
 
-@app.get("/images/")
+@app.get("/api/v1/images/")
 async def get_image():
     res = await s3_service.get_all()
     return {"image_name": res}

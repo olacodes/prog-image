@@ -8,7 +8,7 @@ from process_service.thumbnail.thumbnail import thumbnail
 
 
 router = APIRouter(
-    prefix="/thumbnail",
+    prefix="/api/v1/thumbnail",
     tags=["thumbnail"],
     responses={404: {"description": "Not found"}},
 )

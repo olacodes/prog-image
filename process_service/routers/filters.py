@@ -6,7 +6,7 @@ from process_service.utils import fetch_url
 from process_service.filtering.filter import filter
 
 router = APIRouter(
-    prefix="/filters",
+    prefix="/api/v1/filters",
     tags=["filters"],
     responses={404: {"description": "Not found"}},
 )

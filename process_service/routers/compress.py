@@ -7,7 +7,7 @@ from process_service.utils import fetch_url
 from process_service.compression.compress import compress
 
 router = APIRouter(
-    prefix="/compress",
+    prefix="/api/v1/compress",
     tags=["compress"],
     responses={404: {"description": "Not found"}},
 )

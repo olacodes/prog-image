@@ -7,7 +7,7 @@ from process_service.rotation.rotate import rotate
 
 
 router = APIRouter(
-    prefix="/rotate",
+    prefix="/api/v1/rotate",
     tags=["rotation"],
     responses={404: {"description": "Not found"}},
 )
