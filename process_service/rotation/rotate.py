@@ -1,6 +1,9 @@
+import environ
 from PIL import Image
 from io import BytesIO
 
+env = environ.Env()
+ROTATED_FILES = env('ROTATED_FILES')
 
 def rotate(file, filename, ext, angle, expand, is_file=False):
 
@@ -9,7 +12,7 @@ def rotate(file, filename, ext, angle, expand, is_file=False):
         img = img.rotate(
             angle, resample=Image.Resampling.NEAREST, expand=expand)
         filename = f'{filename}_rotate.{ext}'
-        img.save(filename)
+        img.save(f'{ROTATED_FILES}/{filename}')
         return filename
     except OSError as e:
         print("Cannot rotate this file", filename)

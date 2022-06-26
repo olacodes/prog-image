@@ -13,18 +13,20 @@ from storage_service.app.utils import remove_file_dir, list_files, create_dir, c
 env = environ.Env()
 SUPPORTED_FORMATS = ['png', 'jpeg', 'webp']
 
+TMP_FILES = env('TMP_FILES')
+TMP_IMG = env('TMP_IMG')
 
 @app.task(name='format_converter')
 def format_converter():
-    files = list_files(env('TMP_FILES'))
+    files = list_files(TMP_FILES)
     for file in files:
         filename = file.split('.')[0]
-        file_dir = f'tmp/img/{filename}'
+        file_dir = f'{TMP_IMG}/{filename}'
         create_dir(file_dir)
         for format in SUPPORTED_FORMATS:
-            image = Image.open(f'tmp/files/{file}')
+            image = Image.open(f'{TMP_FILES}/{file}')
             image = image.convert('RGB')
-            image = image.save(f'tmp/img/{filename}/{filename}.{format}')
+            image = image.save(f'{TMP_IMG}/{filename}/{filename}.{format}')
 
 
 @app.task(name='url_format_converter')
@@ -35,13 +37,13 @@ def url_format_converter( urls):
             fname = url.split("/")[-1]
             fname = fname.split(".")[0]
             filename = re.sub('[^A-Za-z0-9]+', '', fname)
-            file_dir = f'tmp/img/{filename}'
+            file_dir = f'{TMP_IMG}/{filename}'
             file = response.content
             create_dir(file_dir)
             for format in SUPPORTED_FORMATS:
                 image = Image.open(BytesIO(file))
                 image = image.convert('RGB')
-                image = image.save(f'tmp/img/{filename}/{filename}.{format}')
+                image = image.save(f'{TMP_IMG}/{filename}/{filename}.{format}')
         except Exception as e:
             print(e)
             # Todo: Write the exception to log file
@@ -53,15 +55,15 @@ def url_format_converter( urls):
 def upload_file_s3(link_p, bucket):
     try:
         time.sleep(10)
-        file_paths = list_files('tmp/img')
+        file_paths = list_files(TMP_IMG)
         # wait for file creation
         if len(file_paths) == 0:
             time.sleep(10)
-        file_paths = list_files('tmp/img')
+        file_paths = list_files(TMP_IMG)
         s3 = boto3.resource('s3')
         for file_path in file_paths:
             file_upload_response = s3.meta.client.upload_file(
-                f'tmp/img/{file_path}', bucket, Key=file_path)
+                f'{TMP_IMG}/{file_path}', bucket, Key=file_path)
     except Exception as e:
         print(e)
         # Todo: Write the exception to log file

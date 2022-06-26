@@ -5,6 +5,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 
 from process_service.utils import fetch_url
 from process_service.compression.compress import compress
+from process_service.response import Response
 
 router = APIRouter(
     prefix="/api/v1/compress",
@@ -30,7 +31,7 @@ async def compress_file(
         file_path = compress(file, filename, ext, size_ratio=size_ratio,
                              quality=quality, width=width, height=height, is_file=True)
         res.append(file_path)
-    return {'message': 'Success', 'data': res}
+    return Response(data=dict(res=res))
 
 
 @router.post("/urls/")

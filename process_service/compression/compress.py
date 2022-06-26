@@ -7,8 +7,12 @@ import requests
 from PIL import Image
 from io import BytesIO
 
+env = environ.Env()
+COMPRESS_FILES = env('COMPRESS_FILES')
 
 # IO bound operation needs celery
+
+
 def compress(
     file, filename, ext,
     is_file=False, size_ratio=0.9,
@@ -22,8 +26,9 @@ def compress(
         img = img.resize((width, height), Image.LANCZOS)
     new_filename = f"{filename}_compressed.{ext}"
     try:
-        img.save(new_filename, quality=quality, optimize=True)
+        img.save(f"{COMPRESS_FILES}/{new_filename}", quality=quality, optimize=True)
     except OSError:
         img = img.convert("RGB")
-        img.save(new_filename, quality=quality, optimize=True)
+        img.save(f"{COMPRESS_FILES}/{new_filename}",
+                 quality=quality, optimize=True)
     return new_filename

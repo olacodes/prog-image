@@ -31,3 +31,18 @@ async def thumbnail_url(
         res.append(file_path)
 
     return {'message': 'Success', 'data': res}
+
+
+@router.post("/files/")
+async def thumbnail_files(
+    files: list[UploadFile] = File(None),
+    width: int = 200, height: int = 200
+):
+    res = []
+    for file in files:
+        filename, ext = file.filename.split(".")
+        file = file.file
+        file_path = thumbnail(file, filename, ext, width=width,
+                           height=height, is_file=True)
+        res.append(file_path)
+    return {'message': 'Success', 'data': res}

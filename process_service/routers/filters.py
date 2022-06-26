@@ -36,6 +36,6 @@ async def filter_files(
     for file in files:
         filename, ext = file.filename.split(".")
         file = file.file
-        file_path = filter.delay(file, filename, ext, method=method, is_file=True)
+        file_path = filter(file, filename, ext, method=method, is_file=True)
         res.append(file_path)
     return {'message': 'Success', 'data': res}
