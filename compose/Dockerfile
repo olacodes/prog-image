@@ -17,5 +17,6 @@ RUN chmod +x /start-flower
 
 COPY ./config /progImg/config
 COPY ./storage_service /progImg/storage_service
+COPY ./process_service /progImg/process_service
 
 WORKDIR /progImg
