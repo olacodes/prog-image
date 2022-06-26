@@ -57,7 +57,6 @@ The following are the endpoints available
 | Storage
 | /api/v1/images/                | Post        | multipart/form-data |
 | /api/v1/images/urls            | Post        | application/json    |
-|
 | Retrieve
 | /api/v1/images/                | Get        | application/json   |
 | /api/v1/images/{image_name}    | Get        | application/json    |
@@ -76,15 +75,12 @@ The following are the endpoints available from the `base_url: http://localhost:9
 | Compression
 | /api/vi/compress/files         | Post        | multipart/form-data |
 | /api/vi/compress/urls          | Post        | application/json    |
-|
 | Filters
 | /api/vi/filters/files          | Post        | multipart/form-data |
 | /api/vi/filters/urls           | Post        | application/json    |
-|
 | Rotation
 | /api/vi/rotate/files           | Post        | multipart/form-data  |
 | /api/vi/rotate/urls            | Post        | application/json     |
-|
 | Thumbnail
 | /api/vi/thumbnail/files        | Post         | multipart/form-data |
 | /api/vi/thumbnail/urls         | Post         | application/json    |
