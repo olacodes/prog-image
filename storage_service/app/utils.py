@@ -17,12 +17,6 @@ def create_dir(dir_name):
         os.mkdir(dir_name)
 
 
-def get_content_type(request):
-    types = {'multipart/form-data;': 'form_data', 'application/json': 'json'}
-    content_type = request.headers['content-type']
-    return types[content_type.split(" ")[0]]
-
-
 def list_files(dir):
     cwd = str(Path.cwd())
     my_dirs = list(Path(dir).glob('**'))
