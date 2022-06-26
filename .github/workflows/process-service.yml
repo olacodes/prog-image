@@ -1,0 +1,46 @@
+name: Process Service CI.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-and-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Filter for Process Service
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            process_service:
+              - 'process_service/*'
+
+      - name: Startup Common Services
+        if: steps.filter.outputs.process_service == 'true'
+        run: docker-compose -f common.test.yml up -d
+
+      - name: Startup Process Services
+        if: steps.filter.outputs.process_service == 'true'
+        run: docker-compose -f process-service.test.yml up -d
+
+      - name: Show Common Services Logs
+        if: steps.filter.outputs.process_service == 'true'
+        run: docker-compose -f common.test.yml logs
+
+      - name: Show Process Services Logs
+        if: steps.filter.outputs.process_service == 'true'
+        run: docker-compose -f process-service.test.yml logs
+
+      - name: Run Tests and Linting Checks
+        if: steps.filter.outputs.process_service == 'true'
+        run: docker-compose -f process-service.test.yml exec -T process_service pytest
