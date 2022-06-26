@@ -22,12 +22,12 @@ class FileUploadHandler:
             with open(file_location, "wb") as fd:
                 shutil.copyfileobj(file.file, fd)
                 file_written.append(file.filename)
-        return {"result": f"write {file_written} file in temp/files"}
+        return {"response": f"Saved and uploaded {file_written} file(s)"}
 
     def chain_convert_s3_del(self):
         celery_chain = format_converter.apply_async(
             (), link=upload_file_s3.s(env('AWS_S3_BUCKET')))
-        delete_tmp_dir.delay([env('TMP_FILES'), env('TMP_IMG')])
+        # delete_tmp_dir.delay([env('TMP_FILES'), env('TMP_IMG')])
 
     # def convert(self):
     #     format_converter.delay()
