@@ -9,8 +9,11 @@ services:
     container_name: process_service
     volumes:
       - .:/process_service
-      - ./process_service/tmp/img:/process_service/tmp/img
-      - ./process_service/tmp/files:/process_service/tmp/files
+      - ./process_service/tmp/compressed:/process_service/tmp/compressed
+      - ./process_service/tmp/rotated:/process_service/tmp/rotated
+      - ./process_service/tmp/thumbnailed:/process_service/tmp/thumbnailed
+      - ./process_service/tmp/filtered:/process_service/tmp/filtered
+
     env_file:
       - .env
     ports:
