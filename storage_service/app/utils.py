@@ -15,6 +15,7 @@ def convert(formats, filename, file=None):
 def create_dir(dir_name):
     if not os.path.exists(dir_name):
         os.mkdir(dir_name)
+    return dir_name
 
 
 def list_files(dir):

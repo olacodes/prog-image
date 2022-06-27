@@ -11,5 +11,5 @@ class URLImageHandler:
 
     def chain_convert_s3_del(self):
         celery_chain = url_format_converter.apply_async(
-            (self.urls,), link=upload_file_s3.s(env('AWS_S3_BUCKET')))
+            (self.urls,env('TMP_IMG')), link=upload_file_s3.s(env('AWS_S3_BUCKET')))
         # delete_tmp_dir.delay([env('TMP_FILES'), env('TMP_IMG')])
