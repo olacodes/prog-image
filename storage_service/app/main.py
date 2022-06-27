@@ -24,6 +24,7 @@ s3_service = S3Service(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION)
 
 # The upload file [multipart/form] and urls [application/json] can not be together
 # If their is frontend we could implement a web socket that talk wait until all files are processed
+env = environ.Env()
 
 class ImageURLs(BaseModel):
     urls: list[str] = []
@@ -32,7 +33,7 @@ class ImageURLs(BaseModel):
 @app.post("/api/v1/images/")
 def upload_image(files: List[UploadFile] = File(None)):
     handler = file_upload_handler.FileUploadHandler(files)
-    writer_response = handler.file_writer()
+    writer_response = handler.file_writer(env('TMP_FILES'))
     handler.chain_convert_s3_del()
     if not writer_response:
         return Response(errors=dict(errors=res), status_code=status.HTTP_400_BAD_REQUEST)
