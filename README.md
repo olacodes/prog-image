@@ -29,6 +29,7 @@ Getting started with this project is very simple, all you need is to have Git an
 
 - Clone the repository `git clone https://github.com/olacodes/prog-image.git`
 - change directory `cd prog-image`.
+- Copy .env.dev to .env `cp .env.dev .env`
 - Run `docker-compose up --build`
 
 **NB:** _Running the above command for the first time will download all docker-images and third party packages needed for the app. This will take up to 5 minutes or more for the first build, others will be in a blink of an eye_
