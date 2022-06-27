@@ -1,4 +1,4 @@
-name: Storage Service CI.
+name: Storage Service CI/CD.
 on:
   push:
     branches:
