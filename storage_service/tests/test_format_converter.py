@@ -23,13 +23,13 @@ class TestFormatConverter(unittest.TestCase):
     def setUp(self):
 
         self.task = app.send_task('format_converter', args=[
-                                  "storage_service/app/tests/file_read", env('TMP_TEST_FILES')])
+                                  "storage_service/app/tests/file_read", TMP_TEST_FILES])
 
         self.result = self.task.get()
 
         self.task2 = app.send_task(
             'url_format_converter',
-            args=['/hello', env('TMP_TEST_FILES')]
+            args=['/hello', TMP_TEST_FILES]
         )
         self.result2 = self.task2.get()
 
