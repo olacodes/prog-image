@@ -3,7 +3,8 @@ from PIL import Image
 from io import BytesIO
 
 env = environ.Env()
-THUMBNAILED_FILES = env('THUMBNAILED_FILES')
+THUMBNAILED_FILES = env('THUMBNAILED_FILES',
+                        default="process_service/tmp/thumbnailed")
 
 
 def thumbnail(file, filename, ext, width, height, is_file=False):

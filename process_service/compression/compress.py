@@ -8,7 +8,8 @@ from PIL import Image
 from io import BytesIO
 
 env = environ.Env()
-COMPRESS_FILES = env('COMPRESS_FILES')
+COMPRESS_FILES = env(
+    'COMPRESS_FILES', default="process_service/tmp/compressed")
 
 # IO bound operation needs celery
 

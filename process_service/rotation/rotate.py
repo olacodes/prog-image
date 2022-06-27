@@ -3,7 +3,7 @@ from PIL import Image
 from io import BytesIO
 
 env = environ.Env()
-ROTATED_FILES = env('ROTATED_FILES')
+ROTATED_FILES = env('ROTATED_FILES', default="process_service/tmp/rotated")
 
 def rotate(file, filename, ext, angle, expand, is_file=False):
 

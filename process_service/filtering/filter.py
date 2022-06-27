@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image,  ImageFilter
 
 env = environ.Env()
-FILTERED_FILES = env('FILTERED_FILES')
+FILTERED_FILES = env('FILTERED_FILES', default='process_service/tmp/filtered')
 
 def filter(file, filename, ext, method='blur', is_file=False):
     filt = filt_obj.get(method, None)
