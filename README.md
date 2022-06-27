@@ -62,8 +62,6 @@ The following are the endpoints available
 | /api/v1/images/{image_name}    | Get        | application/json    |
 | /api/v1/images/file/{file_name}| Get        | application/json    |
 
-
-
 ### Process Service
 
 Process service is a Restful api service that allows you to process images like, compression, adding filters, rotate images,and thumbnail creation
