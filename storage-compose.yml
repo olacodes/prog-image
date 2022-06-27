@@ -11,6 +11,7 @@ services:
       - .:/storage_service
       - ./storage_service/tmp/img:/storage_service/tmp/img
       - ./storage_service/tmp/files:/storage_service/tmp/files
+      - ./storage_service/tmp/test_files:/storage_service/tmp/test_files
     env_file:
       - .env
     ports:
