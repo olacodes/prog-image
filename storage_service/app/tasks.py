@@ -17,41 +17,47 @@ TMP_FILES = env('TMP_FILES')
 TMP_IMG = env('TMP_IMG')
 
 @app.task(name='format_converter')
-def format_converter():
-    files = list_files(TMP_FILES)
-    for file in files:
-        filename = file.split('.')[0]
-        file_dir = f'{TMP_IMG}/{filename}'
-        create_dir(file_dir)
-        for format in SUPPORTED_FORMATS:
-            image = Image.open(f'{TMP_FILES}/{file}')
-            image = image.convert('RGB')
-            image = image.save(f'{TMP_IMG}/{filename}/{filename}.{format}')
+def format_converter(read_dir, write_dir):
+    try:
+        files = list_files(read_dir)
+        for file in files:
+            filename = file.split('.')[0]
+            file_dir = f'{write_dir}/{filename}'
+            create_dir(file_dir)
+            for format in SUPPORTED_FORMATS:
+                image = Image.open(f'{read_dir}/{file}')
+                image = image.convert('RGB')
+                image = image.save(f'{write_dir}/{filename}/{filename}.{format}')
+        return 'Done'
+    except Exception as e:
+        print(e)
+        return False
 
 
 @app.task(name='url_format_converter')
-def url_format_converter( urls):
+def url_format_converter(urls, dir):
     for url in urls:
         try:
             response = requests.get(url, stream=True)
             fname = url.split("/")[-1]
             fname = fname.split(".")[0]
             filename = re.sub('[^A-Za-z0-9]+', '', fname)
-            file_dir = f'{TMP_IMG}/{filename}'
+            file_dir = f'{dir}/{filename}'
             file = response.content
             create_dir(file_dir)
             for format in SUPPORTED_FORMATS:
                 image = Image.open(BytesIO(file))
                 image = image.convert('RGB')
-                image = image.save(f'{TMP_IMG}/{filename}/{filename}.{format}')
+                image = image.save(f'{dir}/{filename}/{filename}.{format}')
+            return "Done"
         except Exception as e:
             print(e)
             # Todo: Write the exception to log file
             # write to log
-            return True
+            return False
 
 
-@app.task(name='background_upload')
+@app.task(name='upload_files_s3')
 def upload_file_s3(link_p, bucket):
     try:
         time.sleep(10)
