@@ -13,8 +13,8 @@ from storage_service.app.utils import remove_file_dir, list_files, create_dir, c
 env = environ.Env()
 SUPPORTED_FORMATS = ['png', 'jpeg', 'webp']
 
-TMP_FILES = env('TMP_FILES')
-TMP_IMG = env('TMP_IMG')
+TMP_FILES = env('TMP_FILES', default="storage_service/tmp/files")
+TMP_IMG = env('TMP_IMG', default="storage_service/tmp/img")
 
 @app.task(name='format_converter')
 def format_converter(read_dir, write_dir):
