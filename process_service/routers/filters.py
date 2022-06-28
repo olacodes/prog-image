@@ -1,9 +1,12 @@
+from celery import group
 from pydantic import BaseModel
 from typing import Union, List, Optional
 from fastapi import FastAPI, File, UploadFile, Form, APIRouter
 
-from process_service.utils import fetch_url
+from process_service.response import Response
+from process_service.tasks import handle_filter
 from process_service.filtering.filter import filter
+
 
 router = APIRouter(
     prefix="/api/v1/filters",
@@ -18,24 +21,22 @@ class ImageURLs(BaseModel):
 
 @router.post("/urls/", tags=["filters"])
 async def filter_urls(urls: Union[ImageURLs, None] = [], method: str = 'blur'):
-    res = []
-    for url in urls.urls:
-        file, filename, ext = fetch_url(url)
-        if file:
-            file_path = filter(file, filename, ext, method)
-        res.append(file_path)
-
-    return {'message': 'Success', 'data': res}
+    if len(urls.urls) == 0:
+        return Response(error=dict(urls="Enter an image url"))
+    handler = group(handle_filter.s(url, method) for url in urls.urls)()
+    response = handler.get()
+    return Response(data=dict(filtered_files=response, total=len(response)))
 
 
 @router.post("/files/")
 async def filter_files(
     files: list[UploadFile] = File(None), method: str = 'blur'
 ):
-    res = []
+    response = []
     for file in files:
         filename, ext = file.filename.split(".")
         file = file.file
         file_path = filter(file, filename, ext, method=method, is_file=True)
-        res.append(file_path)
-    return {'message': 'Success', 'data': res}
+        response.append(file_path)
+    return Response(data=dict(filtered_files=response, total=len(response)))
+
