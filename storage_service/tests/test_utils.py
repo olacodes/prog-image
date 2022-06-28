@@ -14,7 +14,7 @@ class TestUtils(unittest.TestCase):
         pass
 
     def test_create_dir(self):
-        dir_created = create_dir("create_dir")
+        dir_created = create_dir(f"{TMP_TEST_FILES}/create_dir")
         self.assertTrue(os.path.exists(dir_created))
 
     def test_list_files(self):

@@ -43,4 +43,4 @@ jobs:
 
       - name: Run Tests and Linting Checks
         if: steps.filter.outputs.process_service == 'true'
-        run: docker-compose -f process-service.test.yml exec -T process_service pytest
+        run: docker-compose -f process-service.test.yml exec -T process_service pytest process_service/tests/
