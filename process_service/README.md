@@ -42,7 +42,6 @@ The following endpoints are available from the `BASE_URL: http://localhost:9000`
 
 | Endpoints | Query Params | Methods | Content Type Accept |
 | --------- | ------------ | ------- | ------------------- |
-
 | Compression
 | /api/vi/compress/files |size_ratio=0.9, width=200 | Post | multipart/form-data |
 | /api/vi/compress/urls |quality=10, height=200 | Post | application/json |
