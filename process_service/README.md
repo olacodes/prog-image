@@ -1,6 +1,6 @@
 # Process Service
 
-![Process Service](https://github.com/olacodes/prog-image/actions/workflows/process-service.yml/badge.svg) 
+![Process Service](https://github.com/olacodes/prog-image/actions/workflows/process-service.yml/badge.svg)
 
 [![Black Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
@@ -19,7 +19,7 @@ Process service is a Restful api service that allows you to process images like,
 
 ## A Simple Architecture
 
-<!-- ![Process Service](static/Process_service.jpg) -->
+![Process Service](/static/process_service_arch.jpg)
 
 ## Getting Started
 
@@ -42,6 +42,7 @@ The following endpoints are available from the `BASE_URL: http://localhost:9000`
 
 | Endpoints | Query Params | Methods | Content Type Accept |
 | --------- | ------------ | ------- | ------------------- |
+
 | Compression
 | /api/vi/compress/files |size_ratio=0.9, width=200 | Post | multipart/form-data |
 | /api/vi/compress/urls |quality=10, height=200 | Post | application/json |
