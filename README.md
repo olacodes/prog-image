@@ -51,7 +51,7 @@ Make sure that all the above servers are running before you start exploring the 
 
 The storage service allows you to store image and retrieve them.
 
-The following are the endpoints available
+The following are the endpoints available from the `BASE_URL: http://localhost:8000`
 
 | Endpoints                      | Methods     | Content Type Accept |
 | ------------------------------ | ------------|---------------------|
@@ -67,7 +67,7 @@ The following are the endpoints available
 
 Process service is a Restful api service that allows you to process images like, compression, adding filters, rotate images,and thumbnail creation
 
-The following are the endpoints available from the `base_url: http://localhost:9000`
+The following are the endpoints available from the `BASE_URL: http://localhost:9000`
 
 | Endpoints                      | Methods     | Content Type Accept |
 | ------------------------------ | ------------|---------------------|
