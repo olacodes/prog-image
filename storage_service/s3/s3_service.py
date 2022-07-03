@@ -1,19 +1,22 @@
-import glob
-import logging
 import boto3
 import botocore
 import environ
 
-env = environ.Env()
+from storage_service.logger import Logger
 
+env = environ.Env()
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
 AWS_REGION = env('AWS_REGION', default=None)
 AWS_S3_BUCKET = env('AWS_S3_BUCKET', default=None)
+AWS_S3_STORAGE_KEY = env('AWS_S3_STORAGE_KEY', default='storage_service/')
+
+logger = Logger(__name__)
 
 
 class S3Service:
     S3 = boto3.resource('s3')
+    log = logger.log()
 
     def __init__(self, aws_access_key_id, aws_secret_access_key, region, *args, **kwargs):
         self.aws_access_key_id = aws_access_key_id
@@ -23,30 +26,30 @@ class S3Service:
     @classmethod
     async def get_file(cls, filename):
         try:
-            fdir = filename.split(".")[0]
-            KEY = f"{fdir}/{filename}"
+            KEY = f"{AWS_S3_STORAGE_KEY}/{filename}"
             cls.S3.Bucket(env('AWS_S3_BUCKET')).download_file(KEY, filename)
             return f'https://{env("AWS_S3_BUCKET")}.s3.amazonaws.com/{KEY}'
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
-                print("The object does not exist.")
+                cls.log.error(e)
+                return {"error": "The object does not exist."}
             else:
-                # Todo: Log to file
-                raise
+                cls.log.error(e)
 
     @classmethod
     async def get_files(cls, prefix):
         try:
             res = cls.S3.Bucket(f"{AWS_S3_BUCKET}")
+            print(prefix)
             return [f'https://{file.bucket_name}.s3.amazonaws.com/{file.key}'
-                    for file in res.objects.filter(Prefix=prefix)]
+                    for file in res.objects.filter(Prefix=f"{AWS_S3_STORAGE_KEY}/{prefix}")]
 
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
-                return "The object does not exist."
+                cls.log.error(e)
+                return {"error": "The object does not exist."}
             else:
-                # Todo: Log to file
-                raise
+                cls.log.error(e)
 
     @classmethod
     async def get_all(cls):
@@ -56,7 +59,7 @@ class S3Service:
                     for file in res.objects.all()]
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
+                cls.log.error(e)
                 return "The object does not exist."
             else:
-                # Todo: Log to file
-                raise
+                cls.log.error(e)

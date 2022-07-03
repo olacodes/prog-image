@@ -1,16 +1,12 @@
-import os
-import environ
+from typing import List, Union
 
+import environ
+from fastapi import FastAPI, File, UploadFile, status
 from pydantic import BaseModel
-from typing import Union, List, Optional, Set
-from fastapi import FastAPI, File, UploadFile, Form, Request, Body, status
 
 from storage_service.app.handlers import file_upload_handler, img_url_handler
-from storage_service.app.tasks import format_converter, url_format_converter, delete_tmp_dir
-from storage_service.s3.s3_service import S3Service
-from storage_service.app.utils import list_files
-
 from storage_service.response import Response
+from storage_service.s3.s3_service import S3Service
 
 env = environ.Env()
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
@@ -22,9 +18,10 @@ app = FastAPI()
 s3_service = S3Service(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION)
 
 
-# The upload file [multipart/form] and urls [application/json] can not be together
-# If their is frontend we could implement a web socket that talk wait until all files are processed
+# The upload file [multipart/form] and urls [application/json]
+# can not be together
 env = environ.Env()
+
 
 class ImageURLs(BaseModel):
     urls: list[str] = []
@@ -35,10 +32,14 @@ async def upload_image(files: List[UploadFile] = File(None)):
     handler = file_upload_handler.FileUploadHandler(files)
     response = await handler.handle()
     if not response:
-        return Response(errors=dict(errors=response), status_code=status.HTTP_400_BAD_REQUEST)
+        return Response(errors=dict(errors=response),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+
     if error := response.get('error', None):
-        return Response(errors=dict(errors=error), status_code=status.HTTP_400_BAD_REQUEST)
-    return Response(data=dict(urls=response, total=len(response)))
+        return Response(errors=dict(errors=error),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+
+    return Response(data=response)
 
 
 @app.post("/api/v1/images/urls/")
@@ -46,21 +47,28 @@ async def upload_url(
     img_urls: Union[ImageURLs, None] = [],
 ):
     handler = img_url_handler.URLImageHandler(img_urls.urls)
-    handler.chain_convert_s3_del()
-    return Response(data=dict(response=f"Saved and Upload {img_urls.urls} files"))
+    response = await handler.handle()
+    if not response:
+        return Response(errors=dict(errors=response),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+    if error := response.get('error', None):
+        return Response(errors=dict(errors=error),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+    return Response(data=response)
 
 
-@app.get("/api/v1/images/{image_name}/")
-async def get_image(image_name):
-    res = await s3_service.get_file(image_name)
+@app.get("/api/v1/images/{id}/")
+async def get_image(id):
+    res = await s3_service.get_file(id)
     if not res:
-        return Response(errors=dict(errors=res), status_code=status.HTTP_404_NOT_FOUND)
+        return Response(errors=dict(errors=res),
+                        status_code=status.HTTP_404_NOT_FOUND)
     return Response(dict(url=res))
 
 
-@app.get("/api/v1/images/file/{prefix}")
-async def get_image(prefix):
-    res = await s3_service.get_files(prefix)
+@app.get("/api/v1/images/file/{id}/")
+async def get_multiple_image_format(id):
+    res = await s3_service.get_files(id)
     if not res:
         return Response(errors=dict(errors=res),
                         status_code=status.HTTP_404_NOT_FOUND)
@@ -68,7 +76,7 @@ async def get_image(prefix):
 
 
 @app.get("/api/v1/images/")
-async def get_image():
+async def get_all_image():
     res = await s3_service.get_all()
     if not res:
         return Response(errors=dict(errors=res),

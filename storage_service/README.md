@@ -18,7 +18,7 @@
 
 ## A Simple Architecture
 
-![Storage Service](static/storage_service.jpg)
+![Storage Service](/static/storage_service.jpg)
 
 ## Getting Started
 
@@ -41,7 +41,6 @@ The following endpoints are available
 
 | Endpoints | Methods | Content Type Accept |
 | --------- | ------- | ------------------- |
-
 | Storage
 | /api/v1/images/ | Post | multipart/form-data |
 | /api/v1/images/urls | Post | application/json |
