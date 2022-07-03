@@ -59,6 +59,7 @@ class S3Service:
                     for file in res.objects.all()]
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
+                cls.log.error(e)
                 return "The object does not exist."
             else:
                 cls.log.error(e)
