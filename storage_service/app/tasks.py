@@ -8,13 +8,19 @@ from PIL import Image
 from io import BytesIO
 
 from config.celery_app import app
-from storage_service.app.utils import remove_file_dir, list_files, create_dir, convert
+from storage_service.app.utils import remove_file_dir, list_files, create_dir #, convert
+from storage_service.global_variables import SUPPORTED_FORMATS
 
 env = environ.Env()
-SUPPORTED_FORMATS = ['png', 'jpeg', 'webp']
 
 TMP_FILES = env('TMP_FILES', default="storage_service/tmp/files")
 TMP_IMG = env('TMP_IMG', default="storage_service/tmp/img")
+
+
+def convert(format, filename, file=None):
+    image = Image.open(f'tmp/files/{file}')
+    image = image.convert('RGB')
+    image = image.save(f'tmp/img/{filename}/{filename}.{format}')
 
 @app.task(name='format_converter')
 def format_converter(read_dir, write_dir):
@@ -25,10 +31,12 @@ def format_converter(read_dir, write_dir):
             file_dir = f'{write_dir}/{filename}'
             create_dir(file_dir)
             for format in SUPPORTED_FORMATS:
-                image = Image.open(f'{read_dir}/{file}')
-                image = image.convert('RGB')
-                image = image.save(f'{write_dir}/{filename}/{filename}.{format}')
-        return 'Done'
+                for format in SUPPORTED_FORMATS:
+                    image = Image.open(f'{read_dir}/{file}')
+                    image = image.convert('RGB')
+                    image = image.save(
+                    f'{write_dir}/{filename}/{filename}.{format}')
+        return True
     except Exception as e:
         print(e)
         return False

@@ -31,16 +31,17 @@ class ImageURLs(BaseModel):
 
 
 @app.post("/api/v1/images/")
-def upload_image(files: List[UploadFile] = File(None)):
+async def upload_image(files: List[UploadFile] = File(None)):
     handler = file_upload_handler.FileUploadHandler(files)
-    writer_response = handler.file_writer(env('TMP_FILES'))
-    handler.chain_convert_s3_del()
-    if not writer_response:
-        return Response(errors=dict(errors=res), status_code=status.HTTP_400_BAD_REQUEST)
-    return Response(data=writer_response)
+    response = await handler.handle()
+    if not response:
+        return Response(errors=dict(errors=response), status_code=status.HTTP_400_BAD_REQUEST)
+    if error := response.get('error', None):
+        return Response(errors=dict(errors=error), status_code=status.HTTP_400_BAD_REQUEST)
+    return Response(data=dict(urls=response, total=len(response)))
 
 
-@ app.post("/api/v1/images/urls/")
+@app.post("/api/v1/images/urls/")
 async def upload_url(
     img_urls: Union[ImageURLs, None] = [],
 ):
@@ -49,7 +50,7 @@ async def upload_url(
     return Response(data=dict(response=f"Saved and Upload {img_urls.urls} files"))
 
 
-@ app.get("/api/v1/images/{image_name}/")
+@app.get("/api/v1/images/{image_name}/")
 async def get_image(image_name):
     res = await s3_service.get_file(image_name)
     if not res:
@@ -57,7 +58,7 @@ async def get_image(image_name):
     return Response(dict(url=res))
 
 
-@ app.get("/api/v1/images/file/{prefix}")
+@app.get("/api/v1/images/file/{prefix}")
 async def get_image(prefix):
     res = await s3_service.get_files(prefix)
     if not res:
@@ -66,7 +67,7 @@ async def get_image(prefix):
     return Response(data=dict(urls=res, total=len(res)))
 
 
-@ app.get("/api/v1/images/")
+@app.get("/api/v1/images/")
 async def get_image():
     res = await s3_service.get_all()
     if not res:

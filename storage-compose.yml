@@ -9,6 +9,7 @@ services:
     container_name: storage_service
     volumes:
       - .:/storage_service
+      - ./storage_service/logs:/storage_service/logs
       - ./storage_service/tmp/img:/storage_service/tmp/img
       - ./storage_service/tmp/files:/storage_service/tmp/files
       - ./storage_service/tmp/test_files:/storage_service/tmp/test_files
