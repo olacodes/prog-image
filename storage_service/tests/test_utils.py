@@ -1,8 +1,9 @@
 import os
-import environ
 import unittest
-from storage_service.app.utils import create_dir, list_files
 
+import environ
+
+from storage_service.app.utils import create_dir, list_files
 
 env = environ.Env()
 TMP_TEST_FILES = env(

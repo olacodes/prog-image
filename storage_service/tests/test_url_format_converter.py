@@ -1,10 +1,11 @@
 import unittest
-import environ
-
-from celery import Celery
 from time import sleep
-from storage_service.app.tasks import url_format_converter
 from unittest.mock import patch
+
+import environ
+from celery import Celery
+
+from storage_service.app.tasks import url_format_converter
 
 env = environ.Env()
 

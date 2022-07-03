@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 FORMATTER = logging.Formatter(
     "%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "logs/storage_service.log"
+LOG_FILE = "storage_service/logs/storage_service.log"
 
 
 class Logger:

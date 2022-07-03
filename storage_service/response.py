@@ -26,6 +26,7 @@ class Response:
             data = None if data is None else dict(data)
             errors = None if errors is None else dict(errors)
             return (data, errors)
-        except:
+        except Exception as e:
             raise InvalidResponse(
-                'None or dict-like structure expected for both data and errors')
+                'None or dict-like structure expected for both data and errors'
+            ) from e
