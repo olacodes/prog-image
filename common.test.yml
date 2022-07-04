@@ -24,6 +24,7 @@ services:
     volumes:
       - .:/progImg
       - ./logs:/progImg/logs
+      - ./storage_service/logs:/storage_service/logs
     command: /start-celeryworker
 
   prog_img_flower:

@@ -25,7 +25,6 @@ class FileValidation:
                 return str(fd.format).lower()
         except OSError as e:
             cls.log.error(e)
-            return None
 
     @classmethod
     def is_supported_format(cls, file_format):

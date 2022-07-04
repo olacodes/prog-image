@@ -36,4 +36,6 @@ class FileUploadHandler(Handler):
 
         # Upload files to S3
         uploaded_file = await self.upload_files_s3(filepaths_list)
+        if not uploaded_file:
+            return {'error': 'Cannot upload file at the moment'}
         return {'urls': uploaded_file, 'total': len(uploaded_file)}

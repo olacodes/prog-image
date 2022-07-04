@@ -1,24 +1,13 @@
-from PIL import Image
-
 from config.celery_app import app
-from storage_service.global_variables import SUPPORTED_FORMATS
-from storage_service.logger import Logger
-
-logger = Logger(__name__)
-log = logger.log()
+from storage_service.app.utils import Utils
+from storage_service.s3.s3_service import S3Service
 
 
 @app.task(name='format_converter')
-def convert(filepath):
-    converted_files = []
-    for format in SUPPORTED_FORMATS:
-        try:
-            image = Image.open(filepath)
-            image = image.convert('RGB')
-            new_filepath = filepath.split(".")[0]
-            new_filepath = f'{new_filepath}.{format}'
-            image.save(new_filepath)
-            converted_files.append(new_filepath)
-        except OSError as e:
-            log.error(e)
-    return converted_files
+def format_converter(filepath):
+    return Utils.convert(filepath)
+
+
+@app.task(name='upload_files')
+def upload_files_s3_celery(files):
+    return S3Service.upload_file_s3(files)

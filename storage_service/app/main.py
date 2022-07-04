@@ -15,7 +15,7 @@ AWS_REGION = env('AWS_REGION', default=None)
 AWS_S3_BUCKET = env('AWS_S3_BUCKET', default=None)
 
 app = FastAPI()
-s3_service = S3Service(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION)
+s3_service = S3Service()
 
 
 # The upload file [multipart/form] and urls [application/json]
@@ -59,26 +59,37 @@ async def upload_url(
 
 @app.get("/api/v1/images/{id}/")
 async def get_image(id):
-    res = await s3_service.get_file(id)
-    if not res:
-        return Response(errors=dict(errors=res),
+    response = await s3_service.get_file(id)
+    if not response:
+        return Response(errors=dict(errors=response),
                         status_code=status.HTTP_404_NOT_FOUND)
-    return Response(dict(url=res))
+    if error := response.get('error', None):
+        return Response(errors=dict(errors=error),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+    return Response(dict(url=response.get('url')))
 
 
 @app.get("/api/v1/images/file/{id}/")
 async def get_multiple_image_format(id):
-    res = await s3_service.get_files(id)
-    if not res:
-        return Response(errors=dict(errors=res),
+    response = await s3_service.get_files(id)
+    if not response:
+        return Response(errors=dict(errors=response),
                         status_code=status.HTTP_404_NOT_FOUND)
-    return Response(data=dict(urls=res, total=len(res)))
+    if error := response.get('error', None):
+        return Response(errors=dict(errors=error),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+    urls = response.get('urls', None)
+    return Response(data=dict(urls=urls, total=len(urls)))
 
 
 @app.get("/api/v1/images/")
 async def get_all_image():
-    res = await s3_service.get_all()
-    if not res:
-        return Response(errors=dict(errors=res),
+    response = await s3_service.get_all()
+    if not response:
+        return Response(errors=dict(errors=response),
                         status_code=status.HTTP_404_NOT_FOUND)
-    return Response(data=dict(urls=res, total=len(res)))
+    if error := response.get('error', None):
+        return Response(errors=dict(errors=error),
+                        status_code=status.HTTP_400_BAD_REQUEST)
+    urls = response.get('urls', None)
+    return Response(data=dict(urls=urls, total=len(urls)))
