@@ -28,7 +28,11 @@ services:
       - ./logs:/progImg/logs
       - ./storage_service/logs:/storage_service/logs
     command: /start-celeryworker
+    links:
+      - progImg_redis
+      - prog_img_python
     depends_on:
+      - prog_img_python
       - progImg_redis
 
   prog_img_flower:
@@ -39,4 +43,10 @@ services:
       - "5555:5555"
     command: /start-flower
     depends_on:
+      - progImg_redis
+      - prog_img_python
+      - progImg_celeryworker
+    links:
+      - progImg_redis
+      - prog_img_python
       - progImg_celeryworker
