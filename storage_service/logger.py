@@ -1,6 +1,6 @@
 import logging
-import sys
 import os
+import sys
 from logging.handlers import TimedRotatingFileHandler
 
 FORMATTER = logging.Formatter(
@@ -8,7 +8,8 @@ FORMATTER = logging.Formatter(
 LOG_FILE = "storage_service/logs/storage_service.log"
 
 if not os.path.exists(LOG_FILE):
-    with open(LOG_FILE, 'w'): pass
+    with open(LOG_FILE, 'w'):
+        pass
 
 
 class Logger:
