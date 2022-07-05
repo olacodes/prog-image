@@ -5,14 +5,17 @@ import unittest
 import environ
 from celery import Celery
 
+from config.celery_app import app
 from storage_service.global_variables import SUPPORTED_FORMATS
 
 env = environ.Env()
 
-BROKER_URL = env('REDIS_URL', default="redis://redis:6379")
-REDIS = env('REDIS_URL', default="redis://redis:6379")
+# BROKER_URL = env('REDIS_URL', default="redis://redis:6379")
+# REDIS = env('REDIS_URL', default="redis://redis:6379")
 
-app = Celery('test', broker=BROKER_URL, backend=REDIS)
+# app = Celery('test', broker=BROKER_URL, backend=REDIS)
+
+
 
 TMP_TEST_FILES = env(
     'TMP_TEST_FILES', default="storage_service/tests/test_files")
