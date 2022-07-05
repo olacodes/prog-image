@@ -9,6 +9,8 @@ services:
     container_name: prog_img_python
     stdin_open: true
     tty: true
+    depends_on:
+      - progImg_redis
 
   progImg_redis:
     image: redis
@@ -26,6 +28,8 @@ services:
       - ./logs:/progImg/logs
       - ./storage_service/logs:/storage_service/logs
     command: /start-celeryworker
+    depends_on:
+      - progImg_redis
 
   prog_img_flower:
     <<: *progImgBase
@@ -34,3 +38,5 @@ services:
     ports:
       - "5555:5555"
     command: /start-flower
+    depends_on:
+      - progImg_celeryworker
